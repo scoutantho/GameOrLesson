@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -31,7 +31,7 @@ namespace GameOrLesson
           
             foreach(FileInfo file in courses)
             {
-                debugList.Items.Add(file.Name);
+                debugList.Items.Add(file.Name); //affiche les nom des fichiers dans la list d'affichage
             }
             
             //ask if game or lesson 
@@ -45,9 +45,12 @@ namespace GameOrLesson
 
         private void game_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(Games[9].FullName);
-
+            //System.Diagnostics.Process.Start(Games[9].FullName);
             
+            Console.WriteLine();
+
+            PowerLineStatus status = System.Windows.SystemParameters.PowerLineStatus;
+            if (status == PowerLineStatus.Online) { debugList.Items.Add("branché"); } //get si il est branch ou non 
         }
 
         private void lesson_Click(object sender, RoutedEventArgs e)
