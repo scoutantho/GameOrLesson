@@ -7,6 +7,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="301" Margin="10,10,0,0" VerticalAlignment="Top" Width="498">
+            <TabItem x:Name="Debug" Header="Debug">
+                <Grid Background="#FFE5E5E5">
+                    <ListBox x:Name="debugList" HorizontalAlignment="Left" Height="263" Margin="10,0,0,0" VerticalAlignment="Top" Width="472"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="option">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

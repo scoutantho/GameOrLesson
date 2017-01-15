@@ -22,6 +22,14 @@ namespace GameOrLesson
     {
         public MainWindow()
         {
+            System.Diagnostics.Process.Start(@"F:\Steam\Steam.exe");
+
+            //ask if game or lesson 
+
+            //if game : foreach file on "jeux" and ask wich play ? 
+
+            //if lesson, watch all in semestre 08 and open browser and if application must be open, open it 
+            // maybe open browser with connection on portail and with 
             InitializeComponent();
         }
     }
