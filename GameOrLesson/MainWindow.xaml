@@ -8,6 +8,13 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="301" Margin="10,10,0,0" VerticalAlignment="Top" Width="498">
+            <TabItem Header="Start">
+                <Grid Background="#FFE5E5E5">
+                    <Button x:Name="game" Content="Game" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top" Width="168" Height="115" Click="game_Click"/>
+                    <Button x:Name="lesson" Content="Lesson" HorizontalAlignment="Left" Margin="314,72,0,0" VerticalAlignment="Top" Width="168" Height="115" Click="lesson_Click"/>
+                </Grid>
+
+            </TabItem>
             <TabItem x:Name="Debug" Header="Debug">
                 <Grid Background="#FFE5E5E5">
                     <ListBox x:Name="debugList" HorizontalAlignment="Left" Height="263" Margin="10,0,0,0" VerticalAlignment="Top" Width="472"/>
@@ -16,6 +23,7 @@
             <TabItem Header="option">
                 <Grid Background="#FFE5E5E5"/>
             </TabItem>
+
         </TabControl>
     </Grid>
 </Window>

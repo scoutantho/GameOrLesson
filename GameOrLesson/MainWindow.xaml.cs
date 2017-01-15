@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,17 +21,38 @@ namespace GameOrLesson
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
-        {
-            System.Diagnostics.Process.Start(@"F:\Steam\Steam.exe");
+       // DirectoryInfo d = new DirectoryInfo(@"F:\"); //get on option menu
+            FileInfo[] Games = new DirectoryInfo(@"F:\").GetFiles("*.lnk"); //only games and TS 
+        FileInfo[] courses = new DirectoryInfo(@"D:\Annee 4\").GetFiles(); //pas les sous dossier
+        //list start at 0 
 
+        public MainWindow()
+        {     InitializeComponent();
+          
+            foreach(FileInfo file in courses)
+            {
+                debugList.Items.Add(file.Name);
+            }
+            
             //ask if game or lesson 
 
             //if game : foreach file on "jeux" and ask wich play ? 
 
             //if lesson, watch all in semestre 08 and open browser and if application must be open, open it 
             // maybe open browser with connection on portail and with 
-            InitializeComponent();
+       
+        }
+
+        private void game_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(Games[9].FullName);
+
+            
+        }
+
+        private void lesson_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

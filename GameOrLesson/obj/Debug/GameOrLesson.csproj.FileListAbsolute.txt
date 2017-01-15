@@ -1,0 +1,14 @@
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\bin\Debug\GameOrLesson.exe.config
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\bin\Debug\GameOrLesson.exe
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\bin\Debug\GameOrLesson.pdb
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson.csprojResolveAssemblyReference.cache
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\MainWindow.g.cs
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\App.g.cs
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson_MarkupCompile.cache
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson_MarkupCompile.lref
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\MainWindow.baml
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson.g.resources
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson.Properties.Resources.resources
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson.csproj.GenerateResource.Cache
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson.exe
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson.pdb
