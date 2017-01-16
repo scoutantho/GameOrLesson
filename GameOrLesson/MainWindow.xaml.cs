@@ -24,13 +24,30 @@ namespace GameOrLesson
     {
        DirectoryInfo d = new DirectoryInfo(@"F:\"); //get on option menu
          FileInfo[] Games = new DirectoryInfo(@"F:\").GetFiles("*.lnk"); //only games and TS 
-        FileInfo[] courses = new DirectoryInfo(@"D:\Annee 4\").GetFiles(); //pas les sous dossier
+        DirectoryInfo[] courses = new DirectoryInfo(@"D:\Annee 4\").GetDirectories(); //pas les sous dossier
+
 
         System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
          System.Windows.Forms.ContextMenu contextMenu;
         System.Windows.Forms.ContextMenu GameMenu;
         System.Windows.Forms.MenuItem menuItem;
         //list start at 0 
+
+            //TODO
+        //ask if game or lesson 
+
+        //if game : foreach file on "jeux" and ask wich play ? 
+
+        //if lesson, watch all in semestre 08 and open browser and if application must be open, open it 
+        // maybe open browser with connection on portail and with 
+        //find how do a separator 
+        // find how do liste déroulante  en fonction du contenu de l'autre 
+        // ask user for wich program launch when click on courses
+        // ask where courses are 
+        // ask where games are 
+        //ask if want to launch many things when one things is hit (ask where is link want to add something and ask where is link for things to add )  
+
+
 
         public MainWindow()
         {
@@ -68,12 +85,7 @@ namespace GameOrLesson
 
             Window_Closing(); //hide window 
 
-            //ask if game or lesson 
-
-            //if game : foreach file on "jeux" and ask wich play ? 
-
-            //if lesson, watch all in semestre 08 and open browser and if application must be open, open it 
-            // maybe open browser with connection on portail and with 
+            
 
 
         }
@@ -106,7 +118,16 @@ namespace GameOrLesson
 
         private void lesson_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            foreach(DirectoryInfo directory in courses)
+            {
+                debugList.Items.Add(directory.Name); //sans git si possible 
+                foreach(DirectoryInfo dir in (new DirectoryInfo(directory.FullName).GetDirectories()))
+                {
+                    debugList.Items.Add(dir.Name);
+                }
+            }
+
+            //throw new NotImplementedException();
         }
 
         private void Window_Closing() //hide application
