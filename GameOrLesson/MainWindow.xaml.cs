@@ -26,7 +26,10 @@ namespace GameOrLesson
     {
        DirectoryInfo d = new DirectoryInfo(@"F:\"); //get on option menu
          FileInfo[] Games = new DirectoryInfo(@"F:\").GetFiles("*.lnk"); //only games and TS 
-        DirectoryInfo[] courses = new DirectoryInfo(@"D:\Annee 4\").GetDirectories(); //pas les sous dossier
+        DirectoryInfo[] courses = new DirectoryInfo(@"D:\Annee 4\").GetDirectories();
+
+        DirectoryInfo[] lecteur = new DirectoryInfo(@"D:\Annee 4\").GetDirectories();
+        
 
 
         System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
@@ -59,6 +62,7 @@ namespace GameOrLesson
 
         public MainWindow()
         {
+            #region must be in a function
             nIcon.Icon = new System.Drawing.Icon(@"C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\icon.ico");
             nIcon.Visible = true;
             //nIcon.ShowBalloonTip(5000, "Title", "Text", System.Windows.Forms.ToolTipIcon.Info);
@@ -90,12 +94,18 @@ namespace GameOrLesson
                 Game.Click += new EventHandler(this.menuItem_Game_Click); //pour tous les fichiers, le meme events
                 
             }
+            #endregion
 
             courseMenu = Lesson();
+
+            this.Courses = new ToolStripMenuItem();
+            Courses.Text = "cours";
+            Courses = getMenuItem(Courses, lecteur);
 
             contextMenu.Items.Add(optionMenuItem);
             contextMenu.Items.Add(GameMenu);
             contextMenu.Items.Add(courseMenu);
+            contextMenu.Items.Add(Courses);
 
             nIcon.ContextMenuStrip = contextMenu; //add contextmenu to icon
 
@@ -180,6 +190,32 @@ namespace GameOrLesson
         {
             
             this.Visibility = Visibility.Hidden;
+        }
+
+
+        private ToolStripMenuItem getMenuItem(ToolStripMenuItem m,DirectoryInfo[] menu) //must have a name
+        {
+           
+            
+            if (menu != null) //or m !=null ? 
+            {
+                foreach (DirectoryInfo dir in menu)
+                {
+                    if (!dir.Attributes.HasFlag(FileAttributes.Hidden))
+                    {
+                        ToolStripMenuItem retMenu = new ToolStripMenuItem();
+                        retMenu.Name = dir.FullName;
+                        retMenu.Text = dir.Name;
+                        retMenu.Click += new EventHandler(lesson_Click);
+                        // FileInfo[] test = new DirectoryInfo(dir.FullName).GetFiles(); //fileinfo ? 
+                        //DirectoryInfo[] temp2 = new DirectoryInfo(dir.FullName).GetDirectories();
+                        m.DropDownItems.Add(getMenuItem(retMenu, new DirectoryInfo(dir.FullName).GetDirectories()));
+
+                    }
+                } 
+            }
+               return m;
+
         }
     }
 }
