@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,12 +30,18 @@ namespace GameOrLesson
 
 
         System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
-         System.Windows.Forms.ContextMenu contextMenu;
-        System.Windows.Forms.ContextMenu GameMenu;
-        System.Windows.Forms.MenuItem menuItem;
+         System.Windows.Forms.ContextMenuStrip contextMenu;
+        System.Windows.Forms.ToolStripMenuItem GameMenu, courseMenu, Game, Courses;
+        System.Windows.Forms.ToolStripMenuItem optionMenuItem; //inside menuitem : game menu, open and courses
+
+
+
+        ContextMenuStrip menu = new ContextMenuStrip();
+        ToolStripMenuItem item, submenu, submenu2;
+
         //list start at 0 
 
-            //TODO
+        //TODO
         //ask if game or lesson 
 
         //if game : foreach file on "jeux" and ask wich play ? 
@@ -55,35 +63,46 @@ namespace GameOrLesson
             nIcon.Visible = true;
             //nIcon.ShowBalloonTip(5000, "Title", "Text", System.Windows.Forms.ToolTipIcon.Info);
             nIcon.DoubleClick += new EventHandler( nIcon_DoubleClick);
-
-            this.contextMenu = new System.Windows.Forms.ContextMenu();
            
-            this.GameMenu = new System.Windows.Forms.ContextMenu();
 
-            this.menuItem = new System.Windows.Forms.MenuItem();
-            contextMenu.MenuItems.Add(menuItem);
-            menuItem.Text = "open";
-            menuItem.Click += new EventHandler(this.open_click);
-            
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip();
+           
+            this.GameMenu = new System.Windows.Forms.ToolStripMenuItem();
+            GameMenu.Text = "Jeux";
+            this.courseMenu = new ToolStripMenuItem();
+            courseMenu.Text = "cours";
 
-            nIcon.ContextMenu = contextMenu; //add contextmenu to icon
+            this.optionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+           
+            optionMenuItem.Text = "open";
+            optionMenuItem.Click += new EventHandler(this.open_click);
 
-            InitializeComponent();
           
-            
             foreach(FileInfo file in Games)
             {
-                this.menuItem = new System.Windows.Forms.MenuItem();
-                contextMenu.MenuItems.Add(menuItem);
+                this.Game = new System.Windows.Forms.ToolStripMenuItem();
+                
+                GameMenu.DropDownItems.Add(Game);
+                
 
-                menuItem.Text = file.Name;  //just for screen 
-                menuItem.Name = file.FullName;// for gate the full name for launch application 
-                menuItem.Click += new EventHandler(this.menuItem_Game_Click); //pour tous les fichiers, le meme events
+                Game.Text = file.Name;  //just for screen 
+                Game.Name = file.FullName;// for gate the full name for launch application 
+                Game.Click += new EventHandler(this.menuItem_Game_Click); //pour tous les fichiers, le meme events
                 
             }
-           
 
-            Window_Closing(); //hide window 
+            courseMenu = Lesson();
+
+            contextMenu.Items.Add(optionMenuItem);
+            contextMenu.Items.Add(GameMenu);
+            contextMenu.Items.Add(courseMenu);
+
+            nIcon.ContextMenuStrip = contextMenu; //add contextmenu to icon
+
+            InitializeComponent();
+
+            //Window_Closing(); //hide window 
+            this.Window_Closing(this, new CancelEventArgs()) ;
 
             
 
@@ -99,13 +118,14 @@ namespace GameOrLesson
         private void menuItem_Game_Click(object sender, EventArgs e) //when click on menuitem for game 
         {
             // get name from eventhandler
-            String name = ((System.Windows.Forms.MenuItem)sender).Name;
+            String name = ((System.Windows.Forms.ToolStripMenuItem)sender).Name;
             System.Diagnostics.Process.Start(name);
         }
 
         private void nIcon_DoubleClick(object sender, EventArgs e) //close application
         {
             this.Close();
+
         } 
 
         private void game_Click(object sender, RoutedEventArgs e)
@@ -116,22 +136,49 @@ namespace GameOrLesson
             //if (status == PowerLineStatus.Online) { debugList.Items.Add("branché"); } //get si il est branch ou non 
         }
 
-        private void lesson_Click(object sender, RoutedEventArgs e)
+        private void lesson_Click(object sender, EventArgs e)
         {
-            foreach(DirectoryInfo directory in courses)
-            {
-                debugList.Items.Add(directory.Name); //sans git si possible 
-                foreach(DirectoryInfo dir in (new DirectoryInfo(directory.FullName).GetDirectories()))
-                {
-                    debugList.Items.Add(dir.Name);
-                }
-            }
+            String fullname = ((ToolStripMenuItem)sender).Name;
+            Process.Start("explorer.exe", fullname);
 
             //throw new NotImplementedException();
         }
-
-        private void Window_Closing() //hide application
+        private ToolStripMenuItem Lesson() //faire en recursif
         {
+            ToolStripMenuItem ReturnMenuItem = new ToolStripMenuItem();
+            ReturnMenuItem.Text = "Cours";
+            ToolStripMenuItem tempMenuItemReturn = new ToolStripMenuItem();
+            ToolStripMenuItem MenuItemInside = new ToolStripMenuItem();
+
+            foreach (DirectoryInfo directory in courses)
+            {
+                tempMenuItemReturn = new ToolStripMenuItem();
+                tempMenuItemReturn.Text = directory.Name;
+             // debugList.Items.Add(directory.Name); //sans git si possible 
+                foreach (DirectoryInfo dir in (new DirectoryInfo(directory.FullName).GetDirectories()))
+                {
+                    //debugList.Items.Add(dir.Name);
+                    MenuItemInside = new ToolStripMenuItem();
+                    MenuItemInside.Text = dir.Name;
+                    MenuItemInside.Name = dir.FullName;
+                    MenuItemInside.Click += new EventHandler(lesson_Click);
+                    tempMenuItemReturn.DropDownItems.Add(MenuItemInside);
+                }
+                ReturnMenuItem.DropDownItems.Add(tempMenuItemReturn);
+            }
+            return ReturnMenuItem;
+            //throw new NotImplementedException();
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e) //hide application
+        {
+            e.Cancel = true;
+            this.Visibility = Visibility.Hidden;
+            
+        }
+        private void minimizeButton_Click(object sender, System.EventArgs e)
+        {
+            
             this.Visibility = Visibility.Hidden;
         }
     }
