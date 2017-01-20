@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -24,23 +25,23 @@ namespace GameOrLesson
     /// </summary>
     public partial class MainWindow : Window
     {
-       DirectoryInfo d = new DirectoryInfo(@"F:\"); //get on option menu
+      
          FileInfo[] Games = new DirectoryInfo(@"F:\").GetFiles("*.lnk"); //only games and TS 
-        DirectoryInfo[] courses = new DirectoryInfo(@"D:\Annee 4\").GetDirectories();
-
+        DirectoryInfo gameDir = new DirectoryInfo(@"F:\");
         DirectoryInfo[] lecteur = new DirectoryInfo(@"D:\Annee 4\").GetDirectories();
         
 
 
         System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
          System.Windows.Forms.ContextMenuStrip contextMenu;
-        System.Windows.Forms.ToolStripMenuItem GameMenu, courseMenu, Game, Courses;
+        System.Windows.Forms.ToolStripMenuItem GameMenu,  Courses;
         System.Windows.Forms.ToolStripMenuItem optionMenuItem; //inside menuitem : game menu, open and courses
 
-
+        List<Base> Infos = new List<Base>();
+       
 
         ContextMenuStrip menu = new ContextMenuStrip();
-        ToolStripMenuItem item, submenu, submenu2;
+       
 
         //list start at 0 
 
@@ -62,6 +63,9 @@ namespace GameOrLesson
 
         public MainWindow()
         {
+            Infos.Add(new Base("Jeux", @"F:\"));
+            Infos.Add(new Base("Cours", @"D:\Annee 4\"));
+
             #region must be in a function
             nIcon.Icon = new System.Drawing.Icon(@"C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\icon.ico");
             nIcon.Visible = true;
@@ -73,30 +77,16 @@ namespace GameOrLesson
            
             this.GameMenu = new System.Windows.Forms.ToolStripMenuItem();
             GameMenu.Text = "Jeux";
-            this.courseMenu = new ToolStripMenuItem();
-            courseMenu.Text = "cours";
+           
 
             this.optionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-           
             optionMenuItem.Text = "open";
             optionMenuItem.Click += new EventHandler(this.open_click);
 
-          
-            foreach(FileInfo file in Games)
-            {
-                this.Game = new System.Windows.Forms.ToolStripMenuItem();
-                
-                GameMenu.DropDownItems.Add(Game);
-                
-
-                Game.Text = file.Name;  //just for screen 
-                Game.Name = file.FullName;// for gate the full name for launch application 
-                Game.Click += new EventHandler(this.menuItem_Game_Click); //pour tous les fichiers, le meme events
-                
-            }
             #endregion
 
-            courseMenu = Lesson();
+            getFilesIntoFolder(gameDir, GameMenu); //get files into my folder
+          
 
             this.Courses = new ToolStripMenuItem();
             Courses.Text = "cours";
@@ -104,7 +94,6 @@ namespace GameOrLesson
 
             contextMenu.Items.Add(optionMenuItem);
             contextMenu.Items.Add(GameMenu);
-           // contextMenu.Items.Add(courseMenu);
             contextMenu.Items.Add(Courses);
 
             nIcon.ContextMenuStrip = contextMenu; //add contextmenu to icon
@@ -125,52 +114,17 @@ namespace GameOrLesson
             this.WindowState = WindowState.Normal;
         }
 
-        private void menuItem_Game_Click(object sender, EventArgs e) //when click on menuitem for game 
-        {
-            // get name from eventhandler
-            String name = ((System.Windows.Forms.ToolStripMenuItem)sender).Name;
-            System.Diagnostics.Process.Start(name);
-        }
-
         private void nIcon_DoubleClick(object sender, EventArgs e) //close application
         {
             this.Close();
 
-        } 
-
-       
+        }
 
         private void lesson_Click(object sender, EventArgs e)
         {
             String fullname = ((ToolStripMenuItem)sender).Name;
             Process.Start("explorer.exe", fullname);
 
-            //throw new NotImplementedException();
-        }
-        private ToolStripMenuItem Lesson() //faire en recursif
-        {
-            ToolStripMenuItem ReturnMenuItem = new ToolStripMenuItem();
-            ReturnMenuItem.Text = "Cours";
-            ToolStripMenuItem tempMenuItemReturn = new ToolStripMenuItem();
-            ToolStripMenuItem MenuItemInside = new ToolStripMenuItem();
-
-            foreach (DirectoryInfo directory in courses)
-            {
-                tempMenuItemReturn = new ToolStripMenuItem();
-                tempMenuItemReturn.Text = directory.Name;
-             // debugList.Items.Add(directory.Name); //sans git si possible 
-                foreach (DirectoryInfo dir in (new DirectoryInfo(directory.FullName).GetDirectories()))
-                {
-                    //debugList.Items.Add(dir.Name);
-                    MenuItemInside = new ToolStripMenuItem();
-                    MenuItemInside.Text = dir.Name;
-                    MenuItemInside.Name = dir.FullName;
-                    MenuItemInside.Click += new EventHandler(lesson_Click);
-                    tempMenuItemReturn.DropDownItems.Add(MenuItemInside);
-                }
-                ReturnMenuItem.DropDownItems.Add(tempMenuItemReturn);
-            }
-            return ReturnMenuItem;
             //throw new NotImplementedException();
         }
 
@@ -180,12 +134,12 @@ namespace GameOrLesson
             this.Visibility = Visibility.Hidden;
             
         }
+
         private void minimizeButton_Click(object sender, System.EventArgs e)
         {
             
             this.Visibility = Visibility.Hidden;
         }
-
 
         private ToolStripMenuItem getMenuItem(ToolStripMenuItem m,DirectoryInfo[] menu) //must have a name
         {
@@ -207,6 +161,7 @@ namespace GameOrLesson
             }
                return m;
         }
+
         private void getFilesIntoFolder(DirectoryInfo dir, ToolStripMenuItem m)
         {
             
