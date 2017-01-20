@@ -49,6 +49,14 @@ namespace GameOrLesson {
         #line hidden
         
         
+        #line 12 "..\..\MainWindow.xaml"
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        internal System.Windows.Controls.TextBox tab1;
+        
+        #line default
+        #line hidden
+        
+        
         #line 15 "..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.TabItem Debug;
@@ -60,6 +68,14 @@ namespace GameOrLesson {
         #line 17 "..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.ListBox debugList;
+        
+        #line default
+        #line hidden
+        
+        
+        #line 23 "..\..\MainWindow.xaml"
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        internal System.Windows.Controls.Button button;
         
         #line default
         #line hidden
@@ -98,10 +114,16 @@ namespace GameOrLesson {
             this.tabControl = ((System.Windows.Controls.TabControl)(target));
             return;
             case 2:
-            this.Debug = ((System.Windows.Controls.TabItem)(target));
+            this.tab1 = ((System.Windows.Controls.TextBox)(target));
             return;
             case 3:
+            this.Debug = ((System.Windows.Controls.TabItem)(target));
+            return;
+            case 4:
             this.debugList = ((System.Windows.Controls.ListBox)(target));
+            return;
+            case 5:
+            this.button = ((System.Windows.Controls.Button)(target));
             return;
             }
             this._contentLoaded = true;
