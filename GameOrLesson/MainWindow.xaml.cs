@@ -29,12 +29,12 @@ namespace GameOrLesson
          FileInfo[] Games = new DirectoryInfo(@"F:\").GetFiles("*.lnk"); //only games and TS 
         DirectoryInfo gameDir = new DirectoryInfo(@"F:\");
         DirectoryInfo[] lecteur = new DirectoryInfo(@"D:\Annee 4\").GetDirectories();
-        
+        private String cheminIcon = @"C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\icon.ico";
 
 
         System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
          System.Windows.Forms.ContextMenuStrip contextMenu;
-        System.Windows.Forms.ToolStripMenuItem GameMenu,  Courses;
+        System.Windows.Forms.ToolStripMenuItem GameMenu,  Courses, toolStripMenuItem;
         System.Windows.Forms.ToolStripMenuItem optionMenuItem; //inside menuitem : game menu, open and courses
 
         List<Base> Infos = new List<Base>();
@@ -63,49 +63,49 @@ namespace GameOrLesson
 
         public MainWindow()
         {
-            Infos.Add(new Base("Jeux", @"F:\"));
+            Infos.Add(new Base("Jeux", @"F:\",true));
             Infos.Add(new Base("Cours", @"D:\Annee 4\"));
 
-            #region must be in a function
-            nIcon.Icon = new System.Drawing.Icon(@"C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\icon.ico");
-            nIcon.Visible = true;
-            //nIcon.ShowBalloonTip(5000, "Title", "Text", System.Windows.Forms.ToolTipIcon.Info);
-            nIcon.DoubleClick += new EventHandler( nIcon_DoubleClick);
-           
-
-            this.contextMenu = new System.Windows.Forms.ContextMenuStrip();
-           
-            this.GameMenu = new System.Windows.Forms.ToolStripMenuItem();
-            GameMenu.Text = "Jeux";
-           
-
-            this.optionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            optionMenuItem.Text = "open";
-            optionMenuItem.Click += new EventHandler(this.open_click);
-
-            #endregion
-
-            getFilesIntoFolder(gameDir, GameMenu); //get files into my folder
-          
-
-            this.Courses = new ToolStripMenuItem();
-            Courses.Text = "cours";
-            Courses = getMenuItem(Courses, lecteur);
-
-            contextMenu.Items.Add(optionMenuItem);
-            contextMenu.Items.Add(GameMenu);
-            contextMenu.Items.Add(Courses);
-
-            nIcon.ContextMenuStrip = contextMenu; //add contextmenu to icon
+            initModule(nIcon);
 
             InitializeComponent();
-
-            //Window_Closing(); //hide window 
+            
             this.Window_Closing(this, new CancelEventArgs()) ;
 
             
 
 
+        }
+
+        private void initModule(NotifyIcon nIcon)
+        {
+            nIcon.Icon = new System.Drawing.Icon(cheminIcon);
+            nIcon.Visible = true;
+            nIcon.DoubleClick += new EventHandler(nIcon_DoubleClick);
+
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip();
+            
+            this.optionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            optionMenuItem.Text = "open";
+            optionMenuItem.Click += new EventHandler(this.open_click);
+
+            contextMenu.Items.Add(optionMenuItem);
+
+            createItemsForContextMenu(contextMenu);
+
+            nIcon.ContextMenuStrip = contextMenu;
+        }
+
+        private void createItemsForContextMenu(ContextMenuStrip toAdd) { //option only files
+            foreach(Base item in Infos)
+            {
+                ToolStripMenuItem menuItem = new ToolStripMenuItem();
+                menuItem.Text = item.getNom;
+                if (item.getOnlyFiles) { getFilesIntoFolder(menuItem,new DirectoryInfo(item.getChemin)); }
+                else { menuItem = getMenuItem(menuItem, new DirectoryInfo(item.getChemin).GetDirectories());  }
+                
+                toAdd.Items.Add(menuItem);
+            }
         }
 
         private void open_click(object sender, EventArgs e) //for see application, for options etc 
@@ -154,7 +154,7 @@ namespace GameOrLesson
                         retMenu.Text = dir.Name;
                         retMenu.Click += new EventHandler(lesson_Click);
                         m.DropDownItems.Add(getMenuItem(retMenu, new DirectoryInfo(dir.FullName).GetDirectories()));
-                        if (dir.GetFiles() != null) { getFilesIntoFolder(dir,retMenu); }
+                        if (dir.GetFiles() != null) { getFilesIntoFolder(retMenu,dir); }
 
                     }
                 } 
@@ -162,7 +162,7 @@ namespace GameOrLesson
                return m;
         }
 
-        private void getFilesIntoFolder(DirectoryInfo dir, ToolStripMenuItem m)
+        private void getFilesIntoFolder(ToolStripMenuItem m,DirectoryInfo dir )
         {
             
             FileInfo[] test = new DirectoryInfo(dir.FullName).GetFiles(); //fileinfo ? 
