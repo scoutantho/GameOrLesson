@@ -104,7 +104,7 @@ namespace GameOrLesson
 
             contextMenu.Items.Add(optionMenuItem);
             contextMenu.Items.Add(GameMenu);
-            contextMenu.Items.Add(courseMenu);
+           // contextMenu.Items.Add(courseMenu);
             contextMenu.Items.Add(Courses);
 
             nIcon.ContextMenuStrip = contextMenu; //add contextmenu to icon
@@ -138,13 +138,7 @@ namespace GameOrLesson
 
         } 
 
-        private void game_Click(object sender, RoutedEventArgs e)
-        {          
-            Console.WriteLine();
-
-            //PowerLineStatus status = System.Windows.SystemParameters.PowerLineStatus; 
-            //if (status == PowerLineStatus.Online) { debugList.Items.Add("branché"); } //get si il est branch ou non 
-        }
+       
 
         private void lesson_Click(object sender, EventArgs e)
         {
@@ -195,27 +189,46 @@ namespace GameOrLesson
 
         private ToolStripMenuItem getMenuItem(ToolStripMenuItem m,DirectoryInfo[] menu) //must have a name
         {
-           
-            
             if (menu != null) //or m !=null ? 
             {
                 foreach (DirectoryInfo dir in menu)
                 {
-                    if (!dir.Attributes.HasFlag(FileAttributes.Hidden))
+                    if (!dir.Attributes.HasFlag(FileAttributes.Hidden)) //no folder hidden 
                     {
                         ToolStripMenuItem retMenu = new ToolStripMenuItem();
                         retMenu.Name = dir.FullName;
                         retMenu.Text = dir.Name;
                         retMenu.Click += new EventHandler(lesson_Click);
-                        // FileInfo[] test = new DirectoryInfo(dir.FullName).GetFiles(); //fileinfo ? 
-                        //DirectoryInfo[] temp2 = new DirectoryInfo(dir.FullName).GetDirectories();
                         m.DropDownItems.Add(getMenuItem(retMenu, new DirectoryInfo(dir.FullName).GetDirectories()));
+                        if (dir.GetFiles() != null) { getFilesIntoFolder(dir,retMenu); }
 
                     }
                 } 
             }
                return m;
+        }
+        private void getFilesIntoFolder(DirectoryInfo dir, ToolStripMenuItem m)
+        {
+            
+            FileInfo[] test = new DirectoryInfo(dir.FullName).GetFiles(); //fileinfo ? 
 
+            foreach (FileInfo fil in test)
+            {
+                if (!fil.Attributes.HasFlag(FileAttributes.Hidden))
+                {
+                    ToolStripMenuItem file = new ToolStripMenuItem();
+                    file.Text = fil.Name;
+                    file.Name = fil.FullName;
+                    file.Click += new EventHandler(fileOnclick);
+                    m.DropDownItems.Add(file);
+                }
+            }
+        }
+
+        private void fileOnclick(object sender, EventArgs e)
+        {
+            String fullname = ((ToolStripMenuItem)sender).Name;
+            Process.Start(fullname);
         }
     }
 }
