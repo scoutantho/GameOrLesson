@@ -38,7 +38,13 @@ namespace GameOrLesson
         System.Windows.Forms.ToolStripMenuItem optionMenuItem; //inside menuitem : game menu, open and courses
 
         List<Base> Infos = new List<Base>();
-       
+
+        //System.Windows.Controls.TextBox nomTab = new System.Windows.Controls.TextBox();
+        //System.Windows.Controls.Button addTab = new System.Windows.Controls.Button();
+        //System.Windows.Controls.Button rmTab = new System.Windows.Controls.Button();
+        //Grid grilleParam = new Grid();
+
+
 
         ContextMenuStrip menu = new ContextMenuStrip();
        
@@ -67,7 +73,7 @@ namespace GameOrLesson
             Infos.Add(new Base("Cours", @"D:\Annee 4\"));
 
             initModule(nIcon);
-
+            //initVisual();
             InitializeComponent();
             
             this.Window_Closing(this, new CancelEventArgs()) ;
@@ -180,10 +186,95 @@ namespace GameOrLesson
             }
         }
 
+       
+
+        private void addTab_Click(object sender, RoutedEventArgs e)
+        {
+           //if cancel 
+            FolderBrowserDialog chemin = new FolderBrowserDialog();
+            DialogResult result = chemin.ShowDialog();
+           String cheminTab = chemin.SelectedPath;
+            String nom = chemin.SelectedPath;
+            if (nomTab != null) { nom = nomTab.Text; }
+            Infos.Add(new Base(nom, cheminTab));
+
+            //verouiller le tabnom, pouvoir remove, descendre le add, ajouter un nouveau textbox 
+            addElement();
+            
+
+        }
+        private void addElement()
+        {
+            System.Windows.Controls.TextBox nomTabNew = new System.Windows.Controls.TextBox();
+            
+            Grid.SetRow(addTab, Grid.GetRow(addTab)+1);
+            Grid.SetRow(nomTabNew, Grid.GetRow(nomTab) + 1);
+
+        }
+        //private void initVisual()
+        //{
+        //    RowDefinition rowDef1 = new RowDefinition();
+        //    ColumnDefinition colDef1 = new ColumnDefinition();
+
+
+        //    this.addTab = new System.Windows.Controls.Button();
+        //    this.nomTab = new System.Windows.Controls.TextBox();
+        //    this.rmTab = new System.Windows.Controls.Button();
+        //    this.grilleParam = new Grid();
+        //    grilleParam.Name="grille";
+        //    grilleParam.ColumnDefinitions.Add(colDef1);
+        //    grilleParam.RowDefinitions.Add(rowDef1);
+
+
+
+
+        //    nomTab.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+        //    nomTab.VerticalAlignment = VerticalAlignment.Top;
+        //    nomTab.Name = "nomTab";
+        //    nomTab.Height = 20;
+        //    nomTab.Width = 100;
+        //    Thickness m = nomTab.Margin;
+        //    m.Top = 10;
+        //    nomTab.Margin = m;
+        //    grilleParam.Children.Add(nomTab);
+        //    Grid.SetColumn(nomTab, 0);
+        //    Grid.SetRow(nomTab, 0);
+
+        //    addTab.Name = "addTab";
+        //    addTab.Content = "Add";
+        //    addTab.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+        //    addTab.VerticalAlignment = VerticalAlignment.Top;
+        //    addTab.Width = 60;
+        //    Thickness m1 = addTab.Margin;
+        //    m1.Top = 10;
+        //    addTab.Margin = m1;
+        //    addTab.Click += new RoutedEventHandler(addTab_Click);
+        //    grilleParam.Children.Add(addTab);
+        //    Grid.SetColumn(addTab, 1);
+        //    Grid.SetRow(addTab, 0);
+
+        //    rmTab.Name = "rmTab";
+        //    rmTab.Content = "Remove";
+        //    rmTab.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+        //    rmTab.VerticalAlignment = VerticalAlignment.Top;
+        //    rmTab.Width = 60;
+        //    Thickness m2 = rmTab.Margin;
+        //    m2.Top = 10;
+        //    rmTab.Margin = m2;
+        //    grilleParam.Children.Add(rmTab);
+
+        //    Grid.SetColumn(rmTab, 2);
+        //    Grid.SetRow(rmTab, 0);
+
+            
+
+        //}
         private void fileOnclick(object sender, EventArgs e)
         {
             String fullname = ((ToolStripMenuItem)sender).Name;
             Process.Start(fullname);
         }
+
+        
     }
 }
