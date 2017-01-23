@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameOrLesson
 {
+    [Serializable]
     class Base
     {
         private String nom;

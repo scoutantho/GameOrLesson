@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,15 +27,12 @@ namespace GameOrLesson
     public partial class MainWindow : Window
     {
       
-         FileInfo[] Games = new DirectoryInfo(@"F:\").GetFiles("*.lnk"); //only games and TS 
-        DirectoryInfo gameDir = new DirectoryInfo(@"F:\");
-        DirectoryInfo[] lecteur = new DirectoryInfo(@"D:\Annee 4\").GetDirectories();
-        private String cheminIcon = @"C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\icon.ico";
+        private String cheminIcon = "icon.ico";
+        private String InfosFile = "infos.bin";
 
 
         System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
          System.Windows.Forms.ContextMenuStrip contextMenu;
-        System.Windows.Forms.ToolStripMenuItem GameMenu,  Courses, toolStripMenuItem;
         System.Windows.Forms.ToolStripMenuItem optionMenuItem; //inside menuitem : game menu, open and courses
 
         List<Base> Infos = new List<Base>();
@@ -69,11 +67,12 @@ namespace GameOrLesson
 
         public MainWindow()
         {
-            Infos.Add(new Base("Jeux", @"F:\",true));
-            Infos.Add(new Base("Cours", @"D:\Annee 4\"));
+           
+            
+            Infos = deserialize();
 
             initModule(nIcon);
-            //initVisual();
+            
             InitializeComponent();
             
             this.Window_Closing(this, new CancelEventArgs()) ;
@@ -120,6 +119,7 @@ namespace GameOrLesson
         {
             this.Visibility = Visibility.Visible;
             this.WindowState = WindowState.Normal;
+            UpDate(); //for see tab on listbox
         }
 
         private void nIcon_DoubleClick(object sender, EventArgs e) //close application
@@ -191,12 +191,13 @@ namespace GameOrLesson
        private void UpDate()
         {
             initModule(this.nIcon);
-          //  foreach(var item in listBoxTab.Items) { listBoxTab.Items.Remove(item); }
+         
             foreach(Base item in Infos)
             {
                 addElement(item.getNom);
                
             }
+            serialize();
         }
 
         private void addTab_Click(object sender, RoutedEventArgs e)
@@ -307,6 +308,30 @@ namespace GameOrLesson
             Process.Start(fullname);
         }
 
-        
+        private void serialize()
+        {
+            using (Stream stream = File.Open(InfosFile, FileMode.Create))
+            {
+                var bformatter = new BinaryFormatter();
+                bformatter.Serialize(stream, Infos);
+            }
+        }
+
+        private List<Base> deserialize()
+        {
+            try
+            {
+                using (Stream stream = File.Open(InfosFile, FileMode.Open))
+                {
+                    var bformatter = new BinaryFormatter();
+                    return (List<Base>)bformatter.Deserialize(stream);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }
