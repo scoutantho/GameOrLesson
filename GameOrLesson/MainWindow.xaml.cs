@@ -101,8 +101,9 @@ namespace GameOrLesson
 
             nIcon.ContextMenuStrip = contextMenu;
         }
+        
 
-        private void createItemsForContextMenu(ContextMenuStrip toAdd) { //option only files
+        private void createItemsForContextMenu(ContextMenuStrip toAdd) { //option for only files
             foreach(Base item in Infos)
             {
                 ToolStripMenuItem menuItem = new ToolStripMenuItem();
@@ -111,6 +112,7 @@ namespace GameOrLesson
                 else { menuItem = getMenuItem(menuItem, new DirectoryInfo(item.getChemin).GetDirectories());  }
                 
                 toAdd.Items.Add(menuItem);
+               
             }
         }
 
@@ -186,29 +188,59 @@ namespace GameOrLesson
             }
         }
 
-       
+       private void UpDate()
+        {
+            initModule(this.nIcon);
+          //  foreach(var item in listBoxTab.Items) { listBoxTab.Items.Remove(item); }
+            foreach(Base item in Infos)
+            {
+                addElement(item.getNom);
+               
+            }
+        }
 
         private void addTab_Click(object sender, RoutedEventArgs e)
         {
+            bool ischeck=false;
            //if cancel 
+           //changer add button, in 2 separate button witht one fore folders and 2nd for add
+          
             FolderBrowserDialog chemin = new FolderBrowserDialog();
             DialogResult result = chemin.ShowDialog();
            String cheminTab = chemin.SelectedPath;
             String nom = chemin.SelectedPath;
             if (nomTab != null) { nom = nomTab.Text; }
-            Infos.Add(new Base(nom, cheminTab));
+            if (checkBox.IsChecked.HasValue) { ischeck = checkBox.IsChecked.Value; }
 
-            //verouiller le tabnom, pouvoir remove, descendre le add, ajouter un nouveau textbox 
-            addElement();
+            Infos.Add(new Base(nom, cheminTab, ischeck )); //add it in datatbase
+
+           
+            UpDate(); // update notifyicon
+            nomTab.Text = ""; ///reset field
+            if (checkBox.IsChecked == true) { checkBox.IsChecked = false; }
             
 
         }
-        private void addElement()
+
+        private void removeTab_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Controls.TextBox nomTabNew = new System.Windows.Controls.TextBox();
-            
-            Grid.SetRow(addTab, Grid.GetRow(addTab)+1);
-            Grid.SetRow(nomTabNew, Grid.GetRow(nomTab) + 1);
+           
+            foreach(Base item in Infos)
+            {
+                if (item.getNom == listBoxTab.SelectedItem.ToString()) { Infos.Remove(item); break; }
+            }
+            listBoxTab.Items.Remove(listBoxTab.SelectedItem.ToString());
+            UpDate();
+        }
+
+        private void addElement(String nom) //add element to listboxitems
+        {
+            if (!listBoxTab.Items.Contains(nom))
+            {
+                listBoxTab.Items.Add(nom);
+            }
+            //gérer le click sur l'élément du listbox
+           
 
         }
         //private void initVisual()
