@@ -319,7 +319,7 @@ namespace GameOrLesson
 
         private List<Base> deserialize()
         {
-            try
+            if(File.Exists(InfosFile))
             {
                 using (Stream stream = File.Open(InfosFile, FileMode.Open))
                 {
@@ -327,11 +327,8 @@ namespace GameOrLesson
                     return (List<Base>)bformatter.Deserialize(stream);
                 }
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            return new List<Base>();
+          
         }
     }
 }
