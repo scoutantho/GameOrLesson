@@ -1,7 +1,6 @@
 C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\bin\Debug\GameOrLesson.exe.config
 C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\bin\Debug\GameOrLesson.exe
 C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\bin\Debug\GameOrLesson.pdb
-C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson.csprojResolveAssemblyReference.cache
 C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\MainWindow.g.cs
 C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\App.g.cs
 C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson_MarkupCompile.cache
