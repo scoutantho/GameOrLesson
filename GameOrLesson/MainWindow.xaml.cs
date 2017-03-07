@@ -203,13 +203,16 @@ namespace GameOrLesson
         private void addTab_Click(object sender, RoutedEventArgs e)
         {
             bool ischeck=false;
-           //if cancel 
-           //changer add button, in 2 separate button witht one fore folders and 2nd for add
-          
-            FolderBrowserDialog chemin = new FolderBrowserDialog();
-            DialogResult result = chemin.ShowDialog();
-           String cheminTab = chemin.SelectedPath;
-            String nom = chemin.SelectedPath;
+            //if cancel 
+            //changer add button, in 2 separate button witht one fore folders and 2nd for add
+
+            // FolderBrowserDialog chemin = new FolderBrowserDialog();
+            // DialogResult result = chemin.ShowDialog();
+            //String cheminTab = chemin.SelectedPath;
+            // String nom = chemin.SelectedPath;
+            String nom = browse.Content.ToString();
+            String cheminTab = browse.Content.ToString();
+
             if (nomTab != null) { nom = nomTab.Text; }
             if (checkBox.IsChecked.HasValue) { ischeck = checkBox.IsChecked.Value; }
 
@@ -329,6 +332,15 @@ namespace GameOrLesson
             }
             return new List<Base>();
           
+        }
+
+        private void browse_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog chemin = new FolderBrowserDialog();
+            DialogResult result = chemin.ShowDialog();
+            browse.Content = chemin.SelectedPath;
+
+            //envoyer chemin chez add tab ou récupérer chemin de addtab
         }
     }
 }

@@ -11,3 +11,4 @@ C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson.Properti
 C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson.csproj.GenerateResource.Cache
 C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson.exe
 C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson.pdb
+C:\Users\antho\Desktop\GameOrLesson\GameOrLesson\obj\Debug\GameOrLesson.csprojResolveAssemblyReference.cache
