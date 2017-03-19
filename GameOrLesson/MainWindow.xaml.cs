@@ -107,9 +107,15 @@ namespace GameOrLesson
             {
                 ToolStripMenuItem menuItem = new ToolStripMenuItem();
                 menuItem.Text = item.getNom;
-                if (item.getOnlyFiles) { getFilesIntoFolder(menuItem,new DirectoryInfo(item.getChemin)); }
-                else { menuItem = getMenuItem(menuItem, new DirectoryInfo(item.getChemin).GetDirectories());  }
-                
+                if (item.getOnlyFiles) { getFilesIntoFolder(menuItem, new DirectoryInfo(item.getChemin)); }
+                else
+                {
+                    if (new DirectoryInfo(item.getChemin).GetDirectories().Count() > 0)
+                    {
+                        menuItem = getMenuItem(menuItem, new DirectoryInfo(item.getChemin).GetDirectories());
+                    }
+                    else getFilesIntoFolder(menuItem, new DirectoryInfo(item.getChemin));
+                }
                 toAdd.Items.Add(menuItem);
                
             }
@@ -220,7 +226,8 @@ namespace GameOrLesson
 
            
             UpDate(); // update notifyicon
-            nomTab.Text = ""; ///reset field
+            nomTab.Text = ""; ///reset fields
+            browse.Content = "browse";
             if (checkBox.IsChecked == true) { checkBox.IsChecked = false; }
             
 
