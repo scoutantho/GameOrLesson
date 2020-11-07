@@ -28,7 +28,7 @@ namespace GameOrLesson
     {
       
         private String cheminIcon = "icon.ico";
-        private String InfosFile = "infos.bin";
+        
 
 
         System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
@@ -67,9 +67,7 @@ namespace GameOrLesson
 
         public MainWindow()
         {
-           
-            
-            Infos = deserialize();
+            Infos = Class.FileHandler.Deserialize();
 
             initModule(nIcon);
             
@@ -77,28 +75,30 @@ namespace GameOrLesson
             
             this.Window_Closing(this, new CancelEventArgs()) ;
 
-            
-
-
         }
 
         private void initModule(NotifyIcon nIcon)
         {
             nIcon.Icon = new System.Drawing.Icon(cheminIcon);
             nIcon.Visible = true;
-            nIcon.DoubleClick += new EventHandler(nIcon_DoubleClick);
+            nIcon.DoubleClick += new EventHandler(this.open_click);
+            nIcon.Click += new EventHandler(this.open_click);
 
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip();
-            
-            this.optionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            optionMenuItem.Text = "open";
-            optionMenuItem.Click += new EventHandler(this.open_click);
 
-            contextMenu.Items.Add(optionMenuItem);
+            ToolStripMenuItem optionMenuItem_Open = new System.Windows.Forms.ToolStripMenuItem();
+            optionMenuItem_Open.Text = "Open";
+            optionMenuItem_Open.Click += new EventHandler(this.open_click);
 
-            createItemsForContextMenu(contextMenu);
+            ToolStripMenuItem optionMenuItem_Close = new System.Windows.Forms.ToolStripMenuItem();
+            optionMenuItem_Close.Text = "Close";
+            optionMenuItem_Close.Click += new EventHandler(close_Application);
 
-            nIcon.ContextMenuStrip = contextMenu;
+            contextMenu.Items.AddRange(new ToolStripItem[] { optionMenuItem_Open, optionMenuItem_Close }); //ajoute l'option open qui integre l'action du double click 
+
+            createItemsForContextMenu(contextMenu); //créer les items en fonction de ce qui est dans Infos dans le menu contextuel
+
+            nIcon.ContextMenuStrip = contextMenu; //ajoute le menu au vrai menu contextuel
         }
         
 
@@ -107,7 +107,7 @@ namespace GameOrLesson
             {
                 ToolStripMenuItem menuItem = new ToolStripMenuItem();
                 menuItem.Text = item.getNom;
-                if (item.getOnlyFiles) { getFilesIntoFolder(menuItem,new DirectoryInfo(item.getChemin)); }
+                if (item.getOnlyFiles) { getFilesIntoFolder(menuItem, new DirectoryInfo(item.getChemin)); }
                 else { menuItem = getMenuItem(menuItem, new DirectoryInfo(item.getChemin).GetDirectories());  }
                 
                 toAdd.Items.Add(menuItem);
@@ -122,10 +122,9 @@ namespace GameOrLesson
             UpDate(); //for see tab on listbox
         }
 
-        private void nIcon_DoubleClick(object sender, EventArgs e) //close application
+        private void close_Application(object sender, EventArgs e) //close application
         {
             this.Close();
-
         }
 
         private void lesson_Click(object sender, EventArgs e)
@@ -197,7 +196,7 @@ namespace GameOrLesson
                 addElement(item.getNom);
                
             }
-            serialize();
+            Class.FileHandler.SerializeDataToFile(Infos);
         }
 
         private void addTab_Click(object sender, RoutedEventArgs e)
@@ -243,96 +242,15 @@ namespace GameOrLesson
             {
                 listBoxTab.Items.Add(nom);
             }
-            //gérer le click sur l'élément du listbox
-           
-
+            //gérer le click sur l'élément du listbox     
         }
-        //private void initVisual()
-        //{
-        //    RowDefinition rowDef1 = new RowDefinition();
-        //    ColumnDefinition colDef1 = new ColumnDefinition();
 
-
-        //    this.addTab = new System.Windows.Controls.Button();
-        //    this.nomTab = new System.Windows.Controls.TextBox();
-        //    this.rmTab = new System.Windows.Controls.Button();
-        //    this.grilleParam = new Grid();
-        //    grilleParam.Name="grille";
-        //    grilleParam.ColumnDefinitions.Add(colDef1);
-        //    grilleParam.RowDefinitions.Add(rowDef1);
-
-
-
-
-        //    nomTab.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-        //    nomTab.VerticalAlignment = VerticalAlignment.Top;
-        //    nomTab.Name = "nomTab";
-        //    nomTab.Height = 20;
-        //    nomTab.Width = 100;
-        //    Thickness m = nomTab.Margin;
-        //    m.Top = 10;
-        //    nomTab.Margin = m;
-        //    grilleParam.Children.Add(nomTab);
-        //    Grid.SetColumn(nomTab, 0);
-        //    Grid.SetRow(nomTab, 0);
-
-        //    addTab.Name = "addTab";
-        //    addTab.Content = "Add";
-        //    addTab.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-        //    addTab.VerticalAlignment = VerticalAlignment.Top;
-        //    addTab.Width = 60;
-        //    Thickness m1 = addTab.Margin;
-        //    m1.Top = 10;
-        //    addTab.Margin = m1;
-        //    addTab.Click += new RoutedEventHandler(addTab_Click);
-        //    grilleParam.Children.Add(addTab);
-        //    Grid.SetColumn(addTab, 1);
-        //    Grid.SetRow(addTab, 0);
-
-        //    rmTab.Name = "rmTab";
-        //    rmTab.Content = "Remove";
-        //    rmTab.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-        //    rmTab.VerticalAlignment = VerticalAlignment.Top;
-        //    rmTab.Width = 60;
-        //    Thickness m2 = rmTab.Margin;
-        //    m2.Top = 10;
-        //    rmTab.Margin = m2;
-        //    grilleParam.Children.Add(rmTab);
-
-        //    Grid.SetColumn(rmTab, 2);
-        //    Grid.SetRow(rmTab, 0);
-
-            
-
-        //}
         private void fileOnclick(object sender, EventArgs e)
         {
             String fullname = ((ToolStripMenuItem)sender).Name;
             Process.Start(fullname);
         }
 
-        private void serialize()
-        {
-            using (Stream stream = File.Open(InfosFile, FileMode.Create))
-            {
-                var bformatter = new BinaryFormatter();
-                bformatter.Serialize(stream, Infos);
-            }
-        }
-
-        private List<Base> deserialize()
-        {
-            if(File.Exists(InfosFile))
-            {
-                using (Stream stream = File.Open(InfosFile, FileMode.Open))
-                {
-                    var bformatter = new BinaryFormatter();
-                    return (List<Base>)bformatter.Deserialize(stream);
-                }
-            }
-            return new List<Base>();
-          
-        }
 
         private void browse_Click(object sender, RoutedEventArgs e)
         {
